@@ -27,17 +27,10 @@ class QuizPage extends StatefulWidget {
 
 class _QuizPageState extends State<QuizPage> {
   List<Icon> scoreKeeper;
-  List<Map<String, dynamic>> questions;
   Iterator questionIterate;
   var currentQuestion;
-  final Icon iconOk = Icon(
-    Icons.check,
-    color: Colors.green,
-  );
-  final Icon iconFault = Icon(
-    Icons.close,
-    color: Colors.red,
-  );
+  final Icon iconOk = Icon(Icons.check, color: Colors.green);
+  final Icon iconFault = Icon(Icons.close, color: Colors.red);
 
   List<Question> questionBank = [
     Question("You can lead a cow down stairs but not up stairs.", false),
@@ -48,17 +41,6 @@ class _QuizPageState extends State<QuizPage> {
   _QuizPageState() {
     print("重新初始化");
     scoreKeeper = [];
-//    questions = [
-//      {
-//        'question': 'You can lead a cow down stairs but not up stairs.',
-//        'answer': false
-//      },
-//      {
-//        'question': 'Approximately one quarter of human bones are in the feet.',
-//        'answer': true
-//      },
-//      {'question': 'A slug\'s blood is green.', 'answer': true},
-//    ];
     questionIterate = questionBank.iterator;
     questionIterate.moveNext();
   }
