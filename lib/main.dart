@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:quizzler/question_brain.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 void main() => runApp(Quizzler());
 QuestionBrain questionBrain = QuestionBrain();
+
 class Quizzler extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         backgroundColor: Colors.grey.shade900,
         body: SafeArea(
@@ -26,15 +29,42 @@ class QuizPage extends StatefulWidget {
 }
 
 class _QuizPageState extends State<QuizPage> {
-  List<Icon> scoreKeeper;
+  List<Icon> scoreKeeper = [];
   final Icon iconOk = Icon(Icons.check, color: Colors.green);
   final Icon iconFault = Icon(Icons.close, color: Colors.red);
 
+  void checkAnswer(bool userPickAnswer) {
+    var icon;
 
-  _QuizPageState() {
-    print("重新初始化");
-    scoreKeeper = [];
+    icon = questionBrain.currentQuestionAnswer == userPickAnswer
+        ? iconOk
+        : iconFault;
+    questionBrain.nextQuestion();
 
+    if (questionBrain.isEnd) {
+      Alert(
+        context: context,
+//        style: AlertStyle(isCloseButton: false, backgroundColor: Colors.blueGrey),
+        title: questionBrain.currentQuestionText,
+        type: AlertType.success,
+        closeFunction: ()=>print("close"),
+        buttons: [
+          DialogButton(
+            child: Text("OK"),
+            onPressed:  ()=>Navigator.pop(context),
+          ),
+          DialogButton(
+            child: Text("Cancel"),
+            onPressed: ()=>print("Cancel"),
+          )
+        ]
+
+      ).show();
+      return;
+    }
+    setState(() {
+      scoreKeeper.add(icon);
+    });
   }
 
   @override
@@ -74,14 +104,7 @@ class _QuizPageState extends State<QuizPage> {
                 ),
               ),
               onPressed: () {
-                var icon;
-                if (questionBrain.isEnd) return;
-                icon = questionBrain.currentQuestionAnswer  == true ? iconOk : iconFault;
-                questionBrain.nextQuestion();
-
-                setState(() {
-                  scoreKeeper.add(icon);
-                });
+                checkAnswer(true);
               },
             ),
           ),
@@ -99,13 +122,7 @@ class _QuizPageState extends State<QuizPage> {
                 ),
               ),
               onPressed: () {
-                var icon;
-                if (questionBrain.isEnd) return;
-                icon = questionBrain.currentQuestionAnswer == true ? iconFault : iconOk;
-                questionBrain.nextQuestion();
-                setState(() {
-                  scoreKeeper.add(icon);
-                });
+                checkAnswer(false);
               },
             ),
           ),
