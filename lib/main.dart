@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:quizzler/question.dart';
+import 'package:quizzler/question_brain.dart';
 
 void main() => runApp(Quizzler());
-
+QuestionBrain questionBrain = QuestionBrain();
 class Quizzler extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -27,33 +28,19 @@ class QuizPage extends StatefulWidget {
 
 class _QuizPageState extends State<QuizPage> {
   List<Icon> scoreKeeper;
-  Iterator questionIterate;
-  var currentQuestion;
   final Icon iconOk = Icon(Icons.check, color: Colors.green);
   final Icon iconFault = Icon(Icons.close, color: Colors.red);
 
-  List<Question> questionBank = [
-    Question("You can lead a cow down stairs but not up stairs.", false),
-    Question("Approximately one quarter of human bones are in the feet.", true),
-    Question("A slug\'s blood is green.", true),
-  ];
 
   _QuizPageState() {
     print("重新初始化");
     scoreKeeper = [];
-    questionIterate = questionBank.iterator;
-    questionIterate.moveNext();
+
   }
-
-
-
 
   @override
   Widget build(BuildContext context) {
-    currentQuestion = questionIterate.current;
-    print("重新build---$currentQuestion -");
-    currentQuestion ??= Question("恭喜，您已完成所有问答！",  null);
-
+    print("重新build");
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -64,7 +51,7 @@ class _QuizPageState extends State<QuizPage> {
             padding: EdgeInsets.all(10.0),
             child: Center(
               child: Text(
-                currentQuestion.question,
+                questionBrain.questionText(),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 25.0,
@@ -89,9 +76,9 @@ class _QuizPageState extends State<QuizPage> {
               ),
               onPressed: () {
                 var icon;
-                if (currentQuestion.answer == null) return;
-                icon = currentQuestion.answer == true ? iconOk : iconFault;
-                questionIterate.moveNext();
+                if (questionBrain.isEnd) return;
+                icon = questionBrain.questionAnswer()  == true ? iconOk : iconFault;
+                questionBrain.nextQuestion();
 
                 setState(() {
                   scoreKeeper.add(icon);
@@ -114,10 +101,9 @@ class _QuizPageState extends State<QuizPage> {
               ),
               onPressed: () {
                 var icon;
-                if (currentQuestion.answer == null) return;
-                icon = currentQuestion.answer == true ? iconFault : iconOk;
-                questionIterate.moveNext();
-
+                if (questionBrain.isEnd) return;
+                icon = questionBrain.questionAnswer() == true ? iconFault : iconOk;
+                questionBrain.nextQuestion();
                 setState(() {
                   scoreKeeper.add(icon);
                 });
