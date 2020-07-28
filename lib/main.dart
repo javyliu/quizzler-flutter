@@ -44,7 +44,7 @@ class _QuizPageState extends State<QuizPage> {
     if (questionBrain.isEnd) {
       Alert(
         context: context,
-//        style: AlertStyle(isCloseButton: false, backgroundColor: Colors.blueGrey),
+        style: AlertStyle( backgroundColor: Colors.blueGrey, isOverlayTapDismiss: false,),
         title: questionBrain.currentQuestionText,
         type: AlertType.success,
         closeFunction: ()=>print("close"),
@@ -54,8 +54,15 @@ class _QuizPageState extends State<QuizPage> {
             onPressed:  ()=>Navigator.pop(context),
           ),
           DialogButton(
-            child: Text("Cancel"),
-            onPressed: ()=>print("Cancel"),
+            child: Text("Reset"),
+            onPressed: (){
+              questionBrain.reset();
+              Navigator.pop(context);
+              setState(() {
+                scoreKeeper.clear();
+              });
+
+            }
           )
         ]
 

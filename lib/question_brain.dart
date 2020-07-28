@@ -37,7 +37,10 @@ class QuestionBrain {
     nextQuestion();
   }
 
-
+  void reset(){
+    _questionIterate = _questionBank.iterator;
+    nextQuestion();
+  }
 
 
   void nextQuestion(){
@@ -46,7 +49,9 @@ class QuestionBrain {
       _isEnd = true;
       _currentQuestion= Question("恭喜，您已完成所有问答！",  false);
     }else{
+      _isEnd = false;
       _currentQuestion = _questionIterate.current;
+
     }
   }
 
