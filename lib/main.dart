@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quizzler/question.dart';
 
 void main() => runApp(Quizzler());
 
@@ -25,10 +26,52 @@ class QuizPage extends StatefulWidget {
 }
 
 class _QuizPageState extends State<QuizPage> {
-  List<Icon> scoreKeeper = [];
+  List<Icon> scoreKeeper;
+  List<Map<String, dynamic>> questions;
+  Iterator questionIterate;
+  var currentQuestion;
+  final Icon iconOk = Icon(
+    Icons.check,
+    color: Colors.green,
+  );
+  final Icon iconFault = Icon(
+    Icons.close,
+    color: Colors.red,
+  );
+
+  List<Question> questionBank = [
+    Question("You can lead a cow down stairs but not up stairs.", false),
+    Question("Approximately one quarter of human bones are in the feet.", true),
+    Question("A slug\'s blood is green.", true),
+  ];
+
+  _QuizPageState() {
+    print("重新初始化");
+    scoreKeeper = [];
+//    questions = [
+//      {
+//        'question': 'You can lead a cow down stairs but not up stairs.',
+//        'answer': false
+//      },
+//      {
+//        'question': 'Approximately one quarter of human bones are in the feet.',
+//        'answer': true
+//      },
+//      {'question': 'A slug\'s blood is green.', 'answer': true},
+//    ];
+    questionIterate = questionBank.iterator;
+    questionIterate.moveNext();
+  }
+
+
+
 
   @override
   Widget build(BuildContext context) {
+    currentQuestion = questionIterate.current;
+    print("重新build---$currentQuestion -");
+    currentQuestion ??= Question("恭喜，您已完成所有问答！",  null);
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -39,7 +82,7 @@ class _QuizPageState extends State<QuizPage> {
             padding: EdgeInsets.all(10.0),
             child: Center(
               child: Text(
-                'This is where the question text will go.',
+                currentQuestion.question,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 25.0,
@@ -63,11 +106,13 @@ class _QuizPageState extends State<QuizPage> {
                 ),
               ),
               onPressed: () {
+                var icon;
+                if (currentQuestion.answer == null) return;
+                icon = currentQuestion.answer == true ? iconOk : iconFault;
+                questionIterate.moveNext();
+
                 setState(() {
-                  scoreKeeper.add(Icon(
-                    Icons.check,
-                    color: Colors.green,
-                  ));
+                  scoreKeeper.add(icon);
                 });
               },
             ),
@@ -86,11 +131,13 @@ class _QuizPageState extends State<QuizPage> {
                 ),
               ),
               onPressed: () {
+                var icon;
+                if (currentQuestion.answer == null) return;
+                icon = currentQuestion.answer == true ? iconFault : iconOk;
+                questionIterate.moveNext();
+
                 setState(() {
-                  scoreKeeper.add(Icon(
-                    Icons.close,
-                    color: Colors.red,
-                  ));
+                  scoreKeeper.add(icon);
                 });
               },
             ),
