@@ -53,6 +53,12 @@ class QuestionBrain {
 
   bool get isEnd => _isEnd;
 
+
+  String get currentQuestionText => _currentQuestion.question;
+
+
+  bool get currentQuestionAnswer => _currentQuestion.answer;
+
   String questionText(){
     return _currentQuestion.question;
   }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:quizzler/question.dart';
 import 'package:quizzler/question_brain.dart';
 
 void main() => runApp(Quizzler());
@@ -51,7 +50,7 @@ class _QuizPageState extends State<QuizPage> {
             padding: EdgeInsets.all(10.0),
             child: Center(
               child: Text(
-                questionBrain.questionText(),
+                questionBrain.currentQuestionText,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 25.0,
@@ -77,7 +76,7 @@ class _QuizPageState extends State<QuizPage> {
               onPressed: () {
                 var icon;
                 if (questionBrain.isEnd) return;
-                icon = questionBrain.questionAnswer()  == true ? iconOk : iconFault;
+                icon = questionBrain.currentQuestionAnswer  == true ? iconOk : iconFault;
                 questionBrain.nextQuestion();
 
                 setState(() {
@@ -102,7 +101,7 @@ class _QuizPageState extends State<QuizPage> {
               onPressed: () {
                 var icon;
                 if (questionBrain.isEnd) return;
-                icon = questionBrain.questionAnswer() == true ? iconFault : iconOk;
+                icon = questionBrain.currentQuestionAnswer == true ? iconFault : iconOk;
                 questionBrain.nextQuestion();
                 setState(() {
                   scoreKeeper.add(icon);
